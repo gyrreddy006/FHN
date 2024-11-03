@@ -1,3 +1,16 @@
+// Existing functions here...
+
+// Initialize the map when the window loads
+window.onload = function () {
+    initMap();
+
+    // Event listener to close the popup when mapCloseBtn is clicked
+    document.getElementById('mapCloseBtn').addEventListener('click', function() {
+        document.getElementById('popup').classList.add('hidden');
+    });
+
+    // Existing location modal or other event listeners here...
+};
 let map;
 let userMarker;
 
