@@ -1,8 +1,11 @@
-// JavaScript for fetching and displaying hospitals on the hospitals page
+document.addEventListener('DOMContentLoaded', () => {
+    const hospitalsList = JSON.parse(localStorage.getItem('hospitals')) || [];
+    displayHospitals(hospitalsList);
+});
 
 function displayHospitals(hospitals) {
-    const hospitalsList = document.getElementById('hospitalsList');
-    hospitalsList.innerHTML = ''; // Clear existing hospitals
+    const hospitalsListElement = document.getElementById('hospitalsList');
+    hospitalsListElement.innerHTML = '<h2>Nearby Hospitals</h2>';
 
     hospitals.forEach(hospital => {
         const hospitalDiv = document.createElement('div');
@@ -16,7 +19,7 @@ function displayHospitals(hospitals) {
             </div>
             <button class="callBtn" data-number="${hospital.phone || 'N/A'}">Call</button>
         `;
-        hospitalsList.appendChild(hospitalDiv);
+        hospitalsListElement.appendChild(hospitalDiv);
     });
 
     attachCallButtons();
@@ -35,29 +38,3 @@ function attachCallButtons() {
         });
     });
 }
-
-// Fetch hospitals based on latitude and longitude from URL parameters
-function fetchHospitalsData(lat, lng) {
-    const apiKey = 'pk.eccaf37675a2250712865ac32e979be2';
-
-    fetch(`https://us1.locationiq.com/v1/nearby.php?key=${apiKey}&lat=${lat}&lon=${lng}&tag=hospital&radius=5000&format=json`)
-        .then(response => response.json())
-        .then(data => displayHospitals(data.slice(0, 5))) // Limit to 5 hospitals for better UX
-        .catch(error => {
-            console.error('Error fetching hospitals:', error);
-            document.getElementById('hospitalsList').innerHTML = "<p>Error fetching hospitals. Please try again later.</p>";
-        });
-}
-
-// On page load, get location parameters and fetch hospitals
-window.onload = function() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const lat = urlParams.get('lat');
-    const lng = urlParams.get('lng');
-
-    if (lat && lng) {
-        fetchHospitalsData(lat, lng);
-    } else {
-        document.getElementById('hospitalsList').innerHTML = "<p>Location not provided.</p>";
-    }
-};
