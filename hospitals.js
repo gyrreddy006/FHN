@@ -1,34 +1,59 @@
-document.addEventListener("DOMContentLoaded", () => {
-    const hospitalList = document.getElementById("hospitalList");
-    const hospitals = JSON.parse(sessionStorage.getItem("hospitals"));
+const apiKey = "pk.eccaf37675a2250712865ac32e979be2"; // Replace with your LocationIQ API key
 
-    if (hospitals && hospitals.length > 0) {
-        hospitals.forEach(hospital => {
-            // Generate a random cost range
-            const costRange = ["$", "$$", "$$$"][Math.floor(Math.random() * 3)];
+function fetchNearbyHospitals(lat, lng) {
+    const endpoint = `https://us1.locationiq.com/v1/nearby.php?key=${apiKey}&lat=${lat}&lon=${lng}&tag=hospital&radius=5000&format=json`;
 
-            const hospitalItem = document.createElement("div");
-            hospitalItem.className = "hospital-item";
-            hospitalItem.innerHTML = `
-                <img src="https://via.placeholder.com/150" alt="Hospital Image">
-                <div>
-                    <p><strong>${hospital.name}</strong></p>
-                    <p>${hospital.address}</p>
-                    <p>Cost: <strong>${costRange}</strong></p>
-                    <button onclick="makeCall('${hospital.phone}')">Call Now</button>
-                </div>
-            `;
-            hospitalList.appendChild(hospitalItem);
+    fetch(endpoint)
+        .then(response => response.json())
+        .then(data => {
+            displayHospitals(data);
+        })
+        .catch(error => {
+            console.error("Error fetching nearby hospitals:", error);
+            alert("Failed to fetch nearby hospitals.");
         });
-    } else {
-        hospitalList.innerHTML = "<p>No nearby hospitals found.</p>";
-    }
-});
+}
+
+function displayHospitals(hospitals) {
+    const hospitalList = document.getElementById("hospitalList");
+    hospitalList.innerHTML = ""; // Clear previous results
+
+    hospitals.forEach(hospital => {
+        const hospitalItem = document.createElement("div");
+        hospitalItem.classList.add("hospital-item");
+
+        hospitalItem.innerHTML = `
+            <img src="https://via.placeholder.com/150" alt="${hospital.name}"> <!-- Placeholder image, replace with actual URL if available -->
+            <div>
+                <h3>${hospital.name}</h3>
+                <p>${hospital.address}</p>
+                <p>Cost Range: $${Math.floor(Math.random() * 300) + 50} - $${Math.floor(Math.random() * 200) + 100}</p> <!-- Random cost range for example -->
+                <button onclick="makeCall('${hospital.phone}')">Call Now</button>
+            </div>
+        `;
+
+        hospitalList.appendChild(hospitalItem);
+    });
+}
 
 function makeCall(phoneNumber) {
-    if (phoneNumber) {
-        window.location.href = `tel:${phoneNumber}`;
+    window.location.href = `tel:${phoneNumber}`;
+}
+
+// Example function to initiate fetching from geolocation
+function init() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+            const userLocation = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
+            fetchNearbyHospitals(userLocation.lat, userLocation.lng);
+        });
     } else {
-        alert("Phone number not available.");
+        alert("Geolocation is not supported by this browser.");
     }
 }
+
+// Call the init function to start fetching hospitals when the page loads
+window.onload = init;
