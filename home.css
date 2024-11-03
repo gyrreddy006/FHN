@@ -36,33 +36,6 @@ button:hover {
     background-color: #45a049; /* Button hover color */
 }
 
-.hospitals-list {
-    margin: 20px auto;
-    text-align: left;
-    width: 80%; /* Adjust width for better display */
-}
-
-.hospital {
-    border: 1px solid #ccc; /* Border for hospital box */
-    margin: 10px 0;
-    padding: 10px;
-    display: flex;
-    justify-content: space-between; /* Align content properly */
-    align-items: center; /* Center align items */
-}
-
-.callBtn {
-    background-color: #007BFF; /* Call button color */
-    color: white;
-    border: none;
-    padding: 10px 20px; /* Larger padding for bigger button */
-    cursor: pointer;
-}
-
-.callBtn:hover {
-    background-color: #0056b3; /* Call button hover color */
-}
-
 /* Modal styles for location access */
 .modal {
     display: flex;
