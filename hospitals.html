@@ -3,17 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hospitals List</title>
+    <title>Nearby Hospitals</title>
     <link rel="stylesheet" href="style.css">
+    <script src="hospitals.js" defer></script>
 </head>
 <body>
     <div class="header">
         <h1>Nearby Hospitals</h1>
-        <button id="backButton">Back to Map</button>
     </div>
     <div class="main">
-        <div id="hospitalList"></div>
+        <button id="backBtn">Back to Map</button>
+        <div id="hospitalsList" class="hospitals-list"></div>
     </div>
-    <script src="hospitals.js"></script>
+
+    <script>
+        // Event listener for the back button
+        document.getElementById('backBtn').addEventListener('click', function() {
+            window.history.back();
+        });
+    </script>
 </body>
 </html>
