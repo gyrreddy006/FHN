@@ -1,18 +1,10 @@
-<div id="popup" class="popup hidden">
-    <div class="popup-content">
-        <span id="closePopup" class="close">&times;</span>
-        <h2>Nearby Hospitals</h2>
-        <!-- Add the close button for the map popup -->
-        <span id="mapCloseBtn" class="map-close">&times;</span>
-    </div>
-</div>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Find Hospitals Nearby</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 </head>
@@ -24,14 +16,6 @@
         <h2>Find Hospitals Nearby</h2>
         <div id="map" class="map"></div>
         <button id="findHospitalsBtn" onclick="window.location.href='hospitals.html'">Find Hospitals</button>
-    </div>
-    
-    <div id="popup" class="popup hidden">
-        <div class="popup-content">
-            <span id="closePopup" class="close">&times;</span>
-            <h2>Nearby Hospitals</h2>
-            <span id="mapCloseBtn" class="map-close">&times;</span>
-        </div>
     </div>
 
     <div id="locationModal" class="modal hidden">
