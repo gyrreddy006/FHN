@@ -10,6 +10,8 @@ body {
 h1 {
     color: #333;
     margin-top: 20px;
+    font-size: 24px;
+    text-align: center;
 }
 
 button {
@@ -24,21 +26,23 @@ button {
 }
 
 #map {
-    width: 80%;
+    width: 90%;
     height: 400px;
     margin-top: 20px;
-    border: 2px solid #ddd;
+    border: 2px solid black; /* Black border for the map */
     border-radius: 8px;
 }
 
+/* Styles for the hospital list on hospitals.html */
 .hospital-item {
     display: flex;
+    flex-direction: row;
     align-items: center;
     margin-bottom: 15px;
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
-    width: 80%;
+    width: 90%;
 }
 
 .hospital-item img {
@@ -64,4 +68,25 @@ button {
     border-radius: 3px;
     cursor: pointer;
     font-size: 14px;
+}
+
+/* Responsive design for mobile devices */
+@media (max-width: 600px) {
+    h1 {
+        font-size: 20px;
+    }
+    #map {
+        width: 100%;
+        height: 300px;
+    }
+    .hospital-item {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+    }
+    .hospital-item img {
+        width: 100%;
+        height: auto;
+        margin-bottom: 10px;
+    }
 }
