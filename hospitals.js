@@ -31,7 +31,7 @@ function attachMoreButtons() {
         button.addEventListener('click', function() {
             const hospitalId = button.getAttribute('data-hospital-id');
             // Redirect to the hospital detail page
-            window.location.href = `hospital-details.html?id=${hospitalId}`; // Replace with your actual hospital detail page
+            window.location.href = `hospital-details.html?id=${hospitalId}`; // Update with your actual detail page
         });
     });
 }
