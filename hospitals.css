@@ -32,14 +32,14 @@ body {
     align-items: center; /* Center align items */
 }
 
-.callBtn {
-    background-color: #007BFF; /* Call button color */
+.moreBtn {
+    background-color: #007BFF; /* More button color */
     color: white;
     border: none;
     padding: 10px 20px; /* Larger padding for bigger button */
     cursor: pointer;
 }
 
-.callBtn:hover {
-    background-color: #0056b3; /* Call button hover color */
+.moreBtn:hover {
+    background-color: #0056b3; /* More button hover color */
 }
