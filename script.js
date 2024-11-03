@@ -1,79 +1,105 @@
-const apiKey = "pk.eccaf37675a2250712865ac32e979be2"; // Replace with your LocationIQ API key
-
-document.getElementById("findHospitalsBtn").addEventListener("click", initMap);
+let map;
+let userMarker;
 
 function initMap() {
+    const defaultLocation = { lat: 40.7128, lng: -74.0060 }; // Default to NYC
+    map = L.map('map').setView(defaultLocation, 15);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+    }).addTo(map);
+
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition((position) => {
-            const userLocation = {
-                lat: position.coords.latitude,
-                lng: position.coords.longitude
-            };
-
-            const map = L.map('map').setView([userLocation.lat, userLocation.lng], 14);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors'
-            }).addTo(map);
-
-            L.marker([userLocation.lat, userLocation.lng]).addTo(map)
-                .bindPopup("You are here!")
-                .openPopup();
-
-            fetchNearbyHospitals(userLocation.lat, userLocation.lng, map);
-        });
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const pos = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude,
+                };
+                userMarker = L.marker(pos).addTo(map).bindPopup("You are here!").openPopup();
+                map.setView(pos, 15);
+                findNearbyHospitals(pos);
+            },
+            () => {
+                handleLocationError(true, map.getCenter());
+            }
+        );
     } else {
-        alert("Geolocation is not supported by this browser.");
+        handleLocationError(false, map.getCenter());
     }
 }
 
-function fetchNearbyHospitals(lat, lng, map) {
-    const endpoint = `https://us1.locationiq.com/v1/nearby.php?key=${apiKey}&lat=${lat}&lon=${lng}&tag=hospital&radius=5000&format=json`;
+function handleLocationError(browserHasGeolocation, pos) {
+    const infoWindow = L.popup()
+        .setLatLng(pos)
+        .setContent(browserHasGeolocation ? "Error: The Geolocation service failed." : "Error: Your browser doesn't support geolocation.")
+        .openOn(map);
+}
 
-    fetch(endpoint)
+function findNearbyHospitals(location) {
+    const lat = location.lat;
+    const lng = location.lng;
+    const apiKey = 'pk.eccaf37675a2250712865ac32e979be2'; // Your LocationIQ API key
+
+    // Store user location in local storage
+    localStorage.setItem('userLocation', JSON.stringify(location));
+
+    fetch(`https://us1.locationiq.com/v1/nearby.php?key=${apiKey}&lat=${lat}&lon=${lng}&tag=hospital&radius=5000&format=json`)
         .then(response => response.json())
         .then(data => {
-            displayHospitalsPopup(data.slice(0, 3)); // Limit to 3 hospitals
+            const hospitals = data.slice(0, 3); // Limit to 3 hospitals
+            displayHospitals(hospitals);
         })
-        .catch(error => {
-            console.error("Error fetching nearby hospitals:", error);
-            alert("Failed to fetch nearby hospitals.");
-        });
+        .catch(error => console.error('Error fetching hospitals:', error));
 }
 
-function displayHospitalsPopup(hospitals) {
-    const popup = document.getElementById("hospitalPopup");
-    const popupContent = document.getElementById("popupContent");
+function displayHospitals(hospitals) {
+    const popupContent = document.querySelector('.popup-content');
 
-    popupContent.innerHTML = "<h2>Nearby Hospitals</h2>";
+    popupContent.innerHTML = '<span id="closePopup" class="close">&times;</span><h2>Nearby Hospitals</h2>';
+
     hospitals.forEach(hospital => {
-        const hospitalItem = document.createElement("div");
-        hospitalItem.className = "hospital-item";
-        hospitalItem.innerHTML = `
-            <p><strong>${hospital.name}</strong></p>
-            <p>${hospital.address}</p>
-            <button onclick="makeCall('${hospital.phone}')">Call Now</button>
+        const hospitalDiv = document.createElement('div');
+        hospitalDiv.classList.add('hospital');
+        hospitalDiv.innerHTML = `
+            <h3>${hospital.display_name}</h3>
+            <p>Address: ${hospital.display_name}</p>
+            <p>Rating: ${hospital.rating || 'N/A'}</p>
+            <p>Cost Range: ${hospital.cost || 'N/A'}</p>
+            <button class="callBtn" data-number="${hospital.phone || 'N/A'}">Call</button>
         `;
-        popupContent.appendChild(hospitalItem);
+        popupContent.appendChild(hospitalDiv);
     });
 
-    popup.style.display = "block";
+    document.getElementById('popup').classList.remove('hidden');
+    attachCallButtons();
 }
 
-function makeCall(phoneNumber) {
-    if (phoneNumber) {
-        window.location.href = `tel:${phoneNumber}`;
-    } else {
-        alert("Phone number not available.");
-    }
+function attachCallButtons() {
+    const callButtons = document.querySelectorAll('.callBtn');
+    callButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const phoneNumber = button.getAttribute('data-number');
+            if (phoneNumber !== 'N/A') {
+                const sanitizedNumber = phoneNumber.replace(/[^0-9]/g, ''); // Sanitize phone number
+                window.location.href = `tel:${sanitizedNumber}`;
+            } else {
+                alert("Phone number not available.");
+            }
+        });
+    });
 }
 
-// Close popup when clicking outside it or on the close button
-document.getElementById("popupClose").addEventListener("click", () => {
-    document.getElementById("hospitalPopup").style.display = "none";
+// Event listeners for popup functionality
+document.getElementById('findHospitalsBtn').addEventListener('click', function() {
+    const popup = document.getElementById('popup');
+    if (!popup.classList.contains('hidden')) return; // Prevent opening if already visible
+    popup.classList.remove('hidden');
 });
-window.addEventListener("click", (event) => {
-    const popup = document.getElementById("hospitalPopup");
-    if (event.target === popup) {
-        popup.style.display = "none";
-    }
+
+document.getElementById('closePopup').addEventListener('click', function() {
+    document.getElementById('popup').classList.add('hidden');
 });
+
+// Initialize the map when the window loads
+window.onload = initMap;
