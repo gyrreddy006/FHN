@@ -31,15 +31,14 @@ body {
     justify-content: space-between; /* Align content properly */
     align-items: center; /* Center align items */
 }
-
-.callBtn {
-    background-color: #007BFF; /* Call button color */
+.infoBtn {
+    background-color: #007BFF; /* Info button color */
     color: white;
     border: none;
     padding: 10px 20px; /* Larger padding for bigger button */
     cursor: pointer;
 }
 
-.callBtn:hover {
-    background-color: #0056b3; /* Call button hover color */
+.infoBtn:hover {
+    background-color: #0056b3; /* Info button hover color */
 }
