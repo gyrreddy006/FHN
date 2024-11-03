@@ -1,4 +1,5 @@
-// This JavaScript file will handle fetching and displaying hospitals on the hospitals page
+// JavaScript for fetching and displaying hospitals on the hospitals page
+
 function displayHospitals(hospitals) {
     const hospitalsList = document.getElementById('hospitalsList');
     hospitalsList.innerHTML = ''; // Clear existing hospitals
@@ -35,16 +36,28 @@ function attachCallButtons() {
     });
 }
 
-// You may want to call a function to fetch hospitals data on page load
+// Fetch hospitals based on latitude and longitude from URL parameters
+function fetchHospitalsData(lat, lng) {
+    const apiKey = 'pk.eccaf37675a2250712865ac32e979be2';
+
+    fetch(`https://us1.locationiq.com/v1/nearby.php?key=${apiKey}&lat=${lat}&lon=${lng}&tag=hospital&radius=5000&format=json`)
+        .then(response => response.json())
+        .then(data => displayHospitals(data.slice(0, 5))) // Limit to 5 hospitals for better UX
+        .catch(error => {
+            console.error('Error fetching hospitals:', error);
+            document.getElementById('hospitalsList').innerHTML = "<p>Error fetching hospitals. Please try again later.</p>";
+        });
+}
+
+// On page load, get location parameters and fetch hospitals
 window.onload = function() {
     const urlParams = new URLSearchParams(window.location.search);
     const lat = urlParams.get('lat');
     const lng = urlParams.get('lng');
 
     if (lat && lng) {
-        fetch(`https://us1.locationiq.com/v1/nearby.php?key=YOUR_API_KEY&lat=${lat}&lon=${lng}&tag=hospital&radius=5000&format=json`)
-            .then(response => response.json())
-            .then(data => displayHospitals(data))
-            .catch(error => console.error('Error fetching hospitals:', error));
+        fetchHospitalsData(lat, lng);
+    } else {
+        document.getElementById('hospitalsList').innerHTML = "<p>Location not provided.</p>";
     }
 };
