@@ -3,14 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nearby Hospitals</title>
+    <title>Nearby Hospitals - FHN</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <h1>Nearby Hospitals</h1>
-    <div id="hospitalList"></div>
-    <button onclick="window.location.href='index.html'">Back to Map</button>
+    <div id="hospitalList"></div> <!-- This is where the hospital list will be displayed -->
 
-    <script src="hospitals.js"></script>
+    <script>
+        // Example hospital data; replace this with data fetched from your API.
+        const hospitals = [
+            {
+                name: "City Hospital",
+                address: "123 Main St, Cityname",
+                phone: "1234567890",
+                image: "https://via.placeholder.com/150", // Replace with actual hospital image URLs
+                costRange: "$100 - $300"
+            },
+            {
+                name: "Health Care Center",
+                address: "456 Side St, Cityname",
+                phone: "0987654321",
+                image: "https://via.placeholder.com/150", // Replace with actual hospital image URLs
+                costRange: "$50 - $200"
+            },
+            {
+                name: "General Hospital",
+                address: "789 Other Rd, Cityname",
+                phone: "1122334455",
+                image: "https://via.placeholder.com/150", // Replace with actual hospital image URLs
+                costRange: "$150 - $400"
+            }
+        ];
+
+        function displayHospitals(hospitals) {
+            const hospitalList = document.getElementById("hospitalList");
+            hospitals.forEach(hospital => {
+                // Create a container for each hospital
+                const hospitalItem = document.createElement("div");
+                hospitalItem.classList.add("hospital-item");
+
+                hospitalItem.innerHTML = `
+                    <img src="${hospital.image}" alt="${hospital.name}">
+                    <div>
+                        <h3>${hospital.name}</h3>
+                        <p>${hospital.address}</p>
+                        <p>Cost Range: ${hospital.costRange}</p>
+                        <button onclick="makeCall('${hospital.phone}')">Call Now</button>
+                    </div>
+                `;
+
+                hospitalList.appendChild(hospitalItem);
+            });
+        }
+
+        function makeCall(phoneNumber) {
+            window.location.href = `tel:${phoneNumber}`;
+        }
+
+        // Display the example hospital data
+        displayHospitals(hospitals);
+    </script>
 </body>
 </html>
