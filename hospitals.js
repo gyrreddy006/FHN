@@ -17,24 +17,21 @@ function displayHospitals(hospitals) {
                 <p>Rating: ${hospital.rating || 'N/A'}</p>
                 <p>Cost Range: ${hospital.cost || 'N/A'}</p>
             </div>
-            <button class="callBtn" data-number="${hospital.phone || 'N/A'}">Call</button>
+            <button class="moreBtn" data-hospital-id="${hospital.id}">More</button>
         `;
         hospitalsListElement.appendChild(hospitalDiv);
     });
 
-    attachCallButtons();
+    attachMoreButtons();
 }
 
-function attachCallButtons() {
-    const callButtons = document.querySelectorAll('.callBtn');
-    callButtons.forEach(button => {
+function attachMoreButtons() {
+    const moreButtons = document.querySelectorAll('.moreBtn');
+    moreButtons.forEach(button => {
         button.addEventListener('click', function() {
-            const phoneNumber = button.getAttribute('data-number');
-            if (phoneNumber !== 'N/A') {
-                window.location.href = `tel:${phoneNumber}`;
-            } else {
-                alert("Phone number not available.");
-            }
+            const hospitalId = button.getAttribute('data-hospital-id');
+            // Redirect to the hospital detail page
+            window.location.href = `hospital-details.html?id=${hospitalId}`; // Replace with your actual hospital detail page
         });
     });
 }
