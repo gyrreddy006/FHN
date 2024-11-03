@@ -1,0 +1,28 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: white; /* Background set to white for better visibility */
+}
+
+.header {
+    background-color: #4CAF50; /* Header color */
+    color: white;
+    padding: 10px 20px;
+    text-align: left;
+}
+
+.main {
+    text-align: center;
+    margin: 20px;
+}
+
+.hospital-details {
+    margin: 20px auto;
+    text-align: left;
+    width: 80%; /* Adjust width for better display */
+}
+
+h2 {
+    margin-top: 0; /* Remove margin from the top of the h2 */
+}
