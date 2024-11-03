@@ -1,6 +1,11 @@
+document.addEventListener('DOMContentLoaded', () => {
+    const hospitalsList = JSON.parse(localStorage.getItem('hospitals')) || [];
+    displayHospitals(hospitalsList);
+});
+
 function displayHospitals(hospitals) {
-    const hospitalsList = document.getElementById('hospitalsList');
-    hospitalsList.innerHTML = ''; // Clear previous entries
+    const hospitalsListElement = document.getElementById('hospitalsList');
+    hospitalsListElement.innerHTML = '<h2>Nearby Hospitals</h2>';
 
     hospitals.forEach(hospital => {
         const hospitalDiv = document.createElement('div');
@@ -12,12 +17,24 @@ function displayHospitals(hospitals) {
                 <p>Rating: ${hospital.rating || 'N/A'}</p>
                 <p>Cost Range: ${hospital.cost || 'N/A'}</p>
             </div>
-            <button class="infoBtn" onclick="openHospitalInfo('${hospital.website || `https://www.google.com/maps/search/?api=1&query=${hospital.display_name}`}')">Info</button>
+            <button class="callBtn" data-number="${hospital.phone || 'N/A'}">Call</button>
         `;
-        hospitalsList.appendChild(hospitalDiv);
+        hospitalsListElement.appendChild(hospitalDiv);
     });
+
+    attachCallButtons();
 }
 
-function openHospitalInfo(url) {
-    window.open(url, '_blank'); // Open in a new tab
+function attachCallButtons() {
+    const callButtons = document.querySelectorAll('.callBtn');
+    callButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const phoneNumber = button.getAttribute('data-number');
+            if (phoneNumber !== 'N/A') {
+                window.location.href = `tel:${phoneNumber}`;
+            } else {
+                alert("Phone number not available.");
+            }
+        });
+    });
 }
