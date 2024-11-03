@@ -1,16 +1,3 @@
-// Existing functions here...
-
-// Initialize the map when the window loads
-window.onload = function () {
-    initMap();
-
-    // Event listener to close the popup when mapCloseBtn is clicked
-    document.getElementById('mapCloseBtn').addEventListener('click', function() {
-        document.getElementById('popup').classList.add('hidden');
-    });
-
-    // Existing location modal or other event listeners here...
-};
 let map;
 let userMarker;
 
@@ -64,9 +51,8 @@ function findNearbyHospitals(location) {
 }
 
 function displayHospitals(hospitals) {
-    const popupContent = document.querySelector('.popup-content');
-
-    popupContent.innerHTML = '<span id="closePopup" class="close">&times;</span><h2>Nearby Hospitals</h2>';
+    const hospitalsList = document.getElementById('hospitalsList');
+    hospitalsList.innerHTML = '<h2>Nearby Hospitals</h2>';
 
     hospitals.forEach(hospital => {
         const hospitalDiv = document.createElement('div');
@@ -80,10 +66,9 @@ function displayHospitals(hospitals) {
             </div>
             <button class="callBtn" data-number="${hospital.phone || 'N/A'}">Call</button>
         `;
-        popupContent.appendChild(hospitalDiv);
+        hospitalsList.appendChild(hospitalDiv);
     });
 
-    document.getElementById('popup').classList.remove('hidden');
     attachCallButtons();
 }
 
@@ -101,14 +86,7 @@ function attachCallButtons() {
     });
 }
 
-// Event listeners for popup functionality
-document.getElementById('findHospitalsBtn').addEventListener('click', function() {
-    document.getElementById('popup').classList.remove('hidden');
-});
-
-document.getElementById('closePopup').addEventListener('click', function() {
-    document.getElementById('popup').classList.add('hidden');
-});
-
-// Initialize the map when the window loads
-window.onload = initMap;
+// Initialize the map and add event listeners when the window loads
+window.onload = function () {
+    initMap();
+};
