@@ -45,48 +45,10 @@ function findNearbyHospitals(location) {
         .then(response => response.json())
         .then(data => {
             const hospitals = data.slice(0, 3); // Limit to 3 hospitals
-            displayHospitals(hospitals);
+            localStorage.setItem('hospitals', JSON.stringify(hospitals));
         })
         .catch(error => console.error('Error fetching hospitals:', error));
 }
 
-function displayHospitals(hospitals) {
-    const hospitalsList = document.getElementById('hospitalsList');
-    hospitalsList.innerHTML = '<h2>Nearby Hospitals</h2>';
-
-    hospitals.forEach(hospital => {
-        const hospitalDiv = document.createElement('div');
-        hospitalDiv.classList.add('hospital');
-        hospitalDiv.innerHTML = `
-            <div class="hospital-info">
-                <h3>${hospital.display_name}</h3>
-                <p>Address: ${hospital.display_name}</p>
-                <p>Rating: ${hospital.rating || 'N/A'}</p>
-                <p>Cost Range: ${hospital.cost || 'N/A'}</p>
-            </div>
-            <button class="callBtn" data-number="${hospital.phone || 'N/A'}">Call</button>
-        `;
-        hospitalsList.appendChild(hospitalDiv);
-    });
-
-    attachCallButtons();
-}
-
-function attachCallButtons() {
-    const callButtons = document.querySelectorAll('.callBtn');
-    callButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const phoneNumber = button.getAttribute('data-number');
-            if (phoneNumber !== 'N/A') {
-                window.location.href = `tel:${phoneNumber}`;
-            } else {
-                alert("Phone number not available.");
-            }
-        });
-    });
-}
-
-// Initialize the map and add event listeners when the window loads
-window.onload = function () {
-    initMap();
-};
+// Initialize the map when the window loads
+window.onload = initMap;
