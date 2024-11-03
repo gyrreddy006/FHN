@@ -4,24 +4,11 @@ let userMarker;
 function initMap() {
     const defaultLocation = { lat: 40.7128, lng: -74.0060 }; // Default to NYC
     map = L.map('map').setView(defaultLocation, 15);
+
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
     }).addTo(map);
 
-    // Show location modal on page load
-    document.getElementById('locationModal').classList.remove('hidden');
-}
-
-document.getElementById('allowLocationBtn').addEventListener('click', function() {
-    document.getElementById('locationModal').classList.add('hidden');
-    requestLocation();
-});
-
-document.getElementById('denyLocationBtn').addEventListener('click', function() {
-    alert("Location access denied. The app will not function correctly without location access.");
-});
-
-function requestLocation() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             (position) => {
@@ -65,16 +52,19 @@ function findNearbyHospitals(location) {
 
 function displayHospitals(hospitals) {
     const popupContent = document.querySelector('.popup-content');
+
     popupContent.innerHTML = '<span id="closePopup" class="close">&times;</span><h2>Nearby Hospitals</h2>';
 
     hospitals.forEach(hospital => {
         const hospitalDiv = document.createElement('div');
         hospitalDiv.classList.add('hospital');
         hospitalDiv.innerHTML = `
-            <h3>${hospital.display_name}</h3>
-            <p>Address: ${hospital.display_name}</p>
-            <p>Rating: ${hospital.rating || 'N/A'}</p>
-            <p>Cost Range: ${hospital.cost || 'N/A'}</p>
+            <div class="hospital-info">
+                <h3>${hospital.display_name}</h3>
+                <p>Address: ${hospital.display_name}</p>
+                <p>Rating: ${hospital.rating || 'N/A'}</p>
+                <p>Cost Range: ${hospital.cost || 'N/A'}</p>
+            </div>
             <button class="callBtn" data-number="${hospital.phone || 'N/A'}">Call</button>
         `;
         popupContent.appendChild(hospitalDiv);
